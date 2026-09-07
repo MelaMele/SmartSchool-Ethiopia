@@ -13,6 +13,7 @@ use App\Http\Controllers\ParentController;
 use App\Http\Controllers\CommunicationBookController;
 use App\Http\Controllers\SmsController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\UserManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,10 +26,15 @@ Route::get('/', function () {
 });
 
 /* =========================================================================
-   1. አስተዳዳሪ (ADMIN) ROUTES
+   1. አስተዳዳሪ (ADMIN) ROUTES - ሙሉ ጥበቃ ያላቸው
 ========================================================================= */
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', function () { return view('admin.dashboard'); })->name('dashboard');
+
+    // 👥 የተጠቃሚዎች አስተዳደር (በትክክለኛው የአድሚን ጥበቃ ስር ገብቷል)
+    Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserManagementController::class, 'store'])->name('users.store');
+    Route::post('/users/{id}/toggle-status', [UserManagementController::class, 'toggleStatus'])->name('users.toggle_status');
 
     Route::resource('classes', ClassController::class);
     Route::resource('subjects', SubjectController::class);
@@ -70,10 +76,7 @@ Route::middleware(['auth', 'role:admin,teacher'])->group(function () {
     Route::get('/communication/{student_id}', [CommunicationBookController::class, 'index'])->name('communication.index');
     Route::post('/communication/{student_id}', [CommunicationBookController::class, 'store'])->name('communication.store');
 });
-// የተጠቃሚዎች አስተዳደር
-    Route::get('/users', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('users.index');
-    Route::post('/users', [\App\Http\Controllers\UserManagementController::class, 'store'])->name('users.store');
-    Route::post('/users/{id}/toggle-status', [\App\Http\Controllers\UserManagementController::class, 'toggleStatus'])->name('users.toggle_status');
+
 /* =========================================================================
    3. ፋይናንስ ROUTES
 ========================================================================= */
@@ -89,57 +92,13 @@ Route::middleware(['auth', 'role:admin,finance'])->prefix('finance')->group(func
 Route::middleware(['auth', 'role:parent'])->prefix('parent')->group(function () {
     Route::get('/dashboard', [ParentController::class, 'dashboard'])->name('parent.dashboard');
     Route::get('/student/{student_id}', [ParentController::class, 'viewStudentDetails'])->name('parent.student_details');
-    // ወላጁ የግንኙነት ደብተሩን ሲያረጋግጥ
     Route::post('/communication/acknowledge/{id}', [CommunicationBookController::class, 'acknowledge'])->name('communication.acknowledge');
 });
 
 require __DIR__.'/auth.php';
-// ዳታቤዙን በብሮውዘር በአንድ ክሊክ ማስጀመሪያ (One-Click Database Setup)
+
 /*
-Route::get('/setup-database', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
-            '--force' => true,
-            '--seed' => true,
-        ]);
-        return '<div style="text-align:center; margin-top:80px; font-family:sans-serif;">
-            <h1 style="color:#16a34a; font-size:28px;">🎉 ዳታቤዙ በተሳካ ሁኔታ ተፈጥሮ ተሞልቷል!</h1>
-            <p style="color:#4b5563; font-size:16px;">ሁሉም ቴብሎች እና የአድሚን አካውንት በ Clever Cloud ላይ ተፈጥረዋል።</p>
-            <br>
-            <a href="/login" style="background:#16a34a; color:white; padding:12px 28px; text-decoration:none; border-radius:8px; font-weight:bold; font-size:16px;">
-                ወደ መግቢያ ገጽ (Login) ሂድ →
-            </a>
-        </div>';
-    } catch (\Exception $e) {
-        return '<h1 style="color:#dc2626; text-align:center; margin-top:50px; font-family:sans-serif;">ስህተት ተፈጥሯል:<br><br>' . $e->getMessage() . '</h1>';
-    }
-});
+// ለደህንነት ሲባል ተዘግተዋል፦
+Route::get('/setup-database', ...);
+Route::get('/create-demo-users', ...);
 */
-// የሙከራ መምህር እና ወላጅ አካውንት መፍጠሪያ
-Route::get('/create-demo-users', function () {
-    // 1. መምህር መፍጠር
-    \App\Models\User::updateOrCreate(
-        ['email' => 'teacher@smartschool.et'],
-        [
-            'name' => 'መምህር አለሙ ከበደ',
-            'user_id' => 'TCH-001',
-            'role_id' => 2, // Teacher Role
-            'password' => \Illuminate\Support\Facades\Hash::make('Teacher@123'),
-            'is_active' => true,
-        ]
-    );
-
-    // 2. ወላጅ መፍጠር
-    \App\Models\User::updateOrCreate(
-        ['email' => 'parent@smartschool.et'],
-        [
-            'name' => 'አቶ ተስፋዬ በቀለ (ወላጅ)',
-            'user_id' => 'PRN-001',
-            'role_id' => 4, // Parent Role
-            'password' => \Illuminate\Support\Facades\Hash::make('Parent@123'),
-            'is_active' => true,
-        ]
-    );
-
-    return '<h2 style="color:green; text-align:center; margin-top:50px;">🎉 የመምህር እና የወላጅ አካውንቶች ተፈጥረዋል!<br><br><a href="/login">ወደ Login ሂድ</a></h2>';
-});
