@@ -70,7 +70,10 @@ Route::middleware(['auth', 'role:admin,teacher'])->group(function () {
     Route::get('/communication/{student_id}', [CommunicationBookController::class, 'index'])->name('communication.index');
     Route::post('/communication/{student_id}', [CommunicationBookController::class, 'store'])->name('communication.store');
 });
-
+// የተጠቃሚዎች አስተዳደር
+    Route::get('/users', [\App\Http\Controllers\UserManagementController::class, 'index'])->name('users.index');
+    Route::post('/users', [\App\Http\Controllers\UserManagementController::class, 'store'])->name('users.store');
+    Route::post('/users/{id}/toggle-status', [\App\Http\Controllers\UserManagementController::class, 'toggleStatus'])->name('users.toggle_status');
 /* =========================================================================
    3. ፋይናንስ ROUTES
 ========================================================================= */
