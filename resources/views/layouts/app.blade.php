@@ -77,7 +77,9 @@
                 </div>
             </div>
         </aside>
-
+<a href="{{ route('users.index') }}" class="flex items-center px-4 py-2.5 rounded-lg hover:bg-slate-800 transition {{ request()->routeIs('users.*') ? 'bg-emerald-600 text-white' : 'text-gray-300' }}">
+    <span>👥 የተጠቃሚዎች አስተዳደር</span>
+</a>
         <!-- ይዘት -->
         <div class="flex-1 flex flex-col justify-between overflow-hidden">
             <!-- Header -->
