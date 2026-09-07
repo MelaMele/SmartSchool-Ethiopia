@@ -1,20 +1,13 @@
 <?php
 
-/*
-|--------------------------------------------------------------------------
-| Create The Application
-|--------------------------------------------------------------------------
-*/
-
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
 
-/*
-|--------------------------------------------------------------------------
-| Bind Important Interfaces
-|--------------------------------------------------------------------------
-*/
+// ለ Vercel ሰርቨር የ Storage ፎልደሩን ወደ /tmp ማዞር
+if (isset($_ENV['APP_STORAGE']) || getenv('APP_STORAGE')) {
+    $app->useStoragePath(getenv('APP_STORAGE') ?: $_ENV['APP_STORAGE']);
+}
 
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
@@ -30,11 +23,5 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
-
-/*
-|--------------------------------------------------------------------------
-| Return The Application
-|--------------------------------------------------------------------------
-*/
 
 return $app;
