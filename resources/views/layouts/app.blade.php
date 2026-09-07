@@ -16,6 +16,7 @@
 <body class="bg-gray-100 text-gray-800 antialiased">
     <div class="min-h-screen flex" x-data="{ sidebarOpen: false }">
 
+        <!-- የጎን ማውጫ (Sidebar) -->
         <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 text-white transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:inset-0 shadow-xl flex flex-col justify-between">
             <div>
                 <div class="h-16 flex items-center justify-center border-b border-slate-800 px-4 bg-slate-950">
@@ -77,33 +78,48 @@
             </div>
         </aside>
 
-        <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- ይዘት -->
+        <div class="flex-1 flex flex-col justify-between overflow-hidden">
+            <!-- Header -->
             <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6">
                 <button @click="sidebarOpen = !sidebarOpen" class="md:hidden text-gray-600 focus:outline-none">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke_linecap="round" stroke_linejoin="round" stroke_width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
                 <div class="text-sm font-semibold text-gray-600">
-                    የትምህርት ዘመን፦ <span class="text-emerald-700 font-bold">2016 ዓ.ም</span>
+                    የትምህርት ዘመን፦ <span class="text-emerald-700 font-extrabold text-base">2019 ዓ.ም</span>
                 </div>
                 <div class="flex items-center space-x-4">
                     <span class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full font-bold">🟢 ሲስተሙ ክፍት ነው</span>
                 </div>
             </header>
 
+            <!-- Main Content -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
                 @if(session('success'))
-                    <div class="mb-4 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded-lg">
+                    <div class="mb-4 bg-emerald-100 border border-emerald-400 text-emerald-700 px-4 py-3 rounded-lg font-semibold">
                         {{ session('success') }}
                     </div>
                 @endif
                 @if(session('error'))
-                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg font-semibold">
                         {{ session('error') }}
                     </div>
                 @endif
 
                 @yield('content')
             </main>
+
+            <!-- 🌟 Mela Solution Footer (ማራኪ የግርጌ ማህተም) -->
+            <footer class="bg-white border-t border-gray-200 py-4 px-6 text-center text-xs text-gray-500 flex flex-col md:flex-row justify-between items-center gap-2">
+                <div>
+                    &copy; 2019 ዓ.ም <strong class="text-slate-800">SmartSchool Ethiopia</strong>. መብቱ በህግ የተጠበቀ ነው።
+                </div>
+                <div class="bg-slate-50 border border-slate-200 px-4 py-1.5 rounded-full shadow-sm text-slate-700">
+                    🚀 የተገነባው በ፦ <strong class="text-emerald-700 font-bold">Mela Solution</strong> | 
+                    📞 <a href="tel:0913064239" class="hover:text-emerald-600 font-semibold">0913064239</a> / 
+                    <a href="tel:0703064239" class="hover:text-emerald-600 font-semibold">0703064239</a>
+                </div>
+            </footer>
         </div>
     </div>
 </body>
