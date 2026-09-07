@@ -91,3 +91,22 @@ Route::middleware(['auth', 'role:parent'])->prefix('parent')->group(function () 
 });
 
 require __DIR__.'/auth.php';
+// ዳታቤዙን በብሮውዘር በአንድ ክሊክ ማስጀመሪያ (One-Click Database Setup)
+Route::get('/setup-database', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--force' => true,
+            '--seed' => true,
+        ]);
+        return '<div style="text-align:center; margin-top:80px; font-family:sans-serif;">
+            <h1 style="color:#16a34a; font-size:28px;">🎉 ዳታቤዙ በተሳካ ሁኔታ ተፈጥሮ ተሞልቷል!</h1>
+            <p style="color:#4b5563; font-size:16px;">ሁሉም ቴብሎች እና የአድሚን አካውንት በ Clever Cloud ላይ ተፈጥረዋል።</p>
+            <br>
+            <a href="/login" style="background:#16a34a; color:white; padding:12px 28px; text-decoration:none; border-radius:8px; font-weight:bold; font-size:16px;">
+                ወደ መግቢያ ገጽ (Login) ሂድ →
+            </a>
+        </div>';
+    } catch (\Exception $e) {
+        return '<h1 style="color:#dc2626; text-align:center; margin-top:50px; font-family:sans-serif;">ስህተት ተፈጥሯል:<br><br>' . $e->getMessage() . '</h1>';
+    }
+});
