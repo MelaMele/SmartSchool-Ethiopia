@@ -92,6 +92,7 @@ Route::middleware(['auth', 'role:parent'])->prefix('parent')->group(function () 
 
 require __DIR__.'/auth.php';
 // ዳታቤዙን በብሮውዘር በአንድ ክሊክ ማስጀመሪያ (One-Click Database Setup)
+/*
 Route::get('/setup-database', function () {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
@@ -110,3 +111,4 @@ Route::get('/setup-database', function () {
         return '<h1 style="color:#dc2626; text-align:center; margin-top:50px; font-family:sans-serif;">ስህተት ተፈጥሯል:<br><br>' . $e->getMessage() . '</h1>';
     }
 });
+*/
