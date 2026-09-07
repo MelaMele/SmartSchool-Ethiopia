@@ -112,3 +112,31 @@ Route::get('/setup-database', function () {
     }
 });
 */
+// የሙከራ መምህር እና ወላጅ አካውንት መፍጠሪያ
+Route::get('/create-demo-users', function () {
+    // 1. መምህር መፍጠር
+    \App\Models\User::updateOrCreate(
+        ['email' => 'teacher@smartschool.et'],
+        [
+            'name' => 'መምህር አለሙ ከበደ',
+            'user_id' => 'TCH-001',
+            'role_id' => 2, // Teacher Role
+            'password' => \Illuminate\Support\Facades\Hash::make('Teacher@123'),
+            'is_active' => true,
+        ]
+    );
+
+    // 2. ወላጅ መፍጠር
+    \App\Models\User::updateOrCreate(
+        ['email' => 'parent@smartschool.et'],
+        [
+            'name' => 'አቶ ተስፋዬ በቀለ (ወላጅ)',
+            'user_id' => 'PRN-001',
+            'role_id' => 4, // Parent Role
+            'password' => \Illuminate\Support\Facades\Hash::make('Parent@123'),
+            'is_active' => true,
+        ]
+    );
+
+    return '<h2 style="color:green; text-align:center; margin-top:50px;">🎉 የመምህር እና የወላጅ አካውንቶች ተፈጥረዋል!<br><br><a href="/login">ወደ Login ሂድ</a></h2>';
+});
